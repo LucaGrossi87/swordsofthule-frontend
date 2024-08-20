@@ -15,6 +15,8 @@ export class AppComponent implements OnInit {
   monsters: Monster[]=[];
   selectedHero:Hero | undefined
   selectedMonster:Monster | undefined
+  isCombat:boolean = false
+  combatExit:String=''
 
   constructor(
     private appSvc: AppService
@@ -33,8 +35,22 @@ ngOnInit(): void {
 }
 
 combat() {
-this.selectedHero=this.heroes[0]
-this.selectedMonster=this.monsters[0]
+  this.isCombat=true
+  this.selectedHero=this.heroes[0]
+  this.selectedMonster=this.monsters[0]
+  while (this.selectedHero.hitPoints>0 && this.selectedMonster.hitPoints>0) {
+    this.selectedHero.hitPoints=(this.selectedHero.attack+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7))
+    this.selectedMonster.hitPoints=(this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (this.selectedHero.defence+Math.floor(Math.random() * 7))
+    console.log(this.selectedHero.hitPoints);
+    console.log(this.selectedMonster.hitPoints);
 
+  }
+  if(this.selectedHero.hitPoints <= 0) {
+    this.selectedHero.hitPoints=0
+    this.combatExit=`${this.selectedHero.name} è morto`
+  } else {
+    this.selectedMonster.hitPoints=0
+    this.combatExit=`${this.selectedMonster.name} è morto`
+  }
 }
 }

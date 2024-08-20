@@ -6,6 +6,6 @@ export interface Monster {
   level:number;
   attack:number;
   defence: number;
-  hp:number;
+  hitPoints:number;
   type:MonsterType;
 }

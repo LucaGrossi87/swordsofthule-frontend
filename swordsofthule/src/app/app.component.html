@@ -1,8 +1,16 @@
-<h1>Ciao</h1>
+<h1>Swords of Thule</h1>
 
 <div *ngFor="let bg of bgs">{{bg.name}} - {{bg.type}}</div>
 
+<h4>Heroes:</h4>
+<div *ngFor="let hero of heroes"> {{hero.name}} - {{hero.race}} - {{hero.type}} - Attack:{{hero.attack}} - Defence:{{hero.defence}} - Level:{{hero.level}}</div>
 
-<div *ngFor="let hero of heroes">{{hero.name}} - {{hero.race}} - {{hero.class}} - {{hero.attack}} - {{hero.defence}}</div>
+<h4>Monsters:</h4>
+<div *ngFor="let monster of monsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - {{monster.type}}</div>
 
-<div *ngFor="let bg of bgs">{{bg.name}} - {{bg.type}}</div>
+<button (click)="combat()"> Fight! </button>
+<div *ngIf="isCombat">
+<p>{{selectedHero?.name}} - {{selectedHero?.hitPoints}} hp</p>
+<p>{{selectedMonster?.name}} - {{selectedMonster?.hitPoints}} hp</p>
+<p>{{combatExit}}</p>
+</div>

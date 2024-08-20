@@ -9,9 +9,9 @@ export interface Hero {
     level:number;
     attack:number;
     defence: number;
-    hp:number;
+    hitPoints:number;
     race:HeroRace;
-    class:HeroClass;
+    type:HeroClass;
     xp:number;
     itemList: Item[];
     user:User;
