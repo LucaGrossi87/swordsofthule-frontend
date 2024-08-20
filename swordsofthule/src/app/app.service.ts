@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../environments/environments';
 import { Observable } from 'rxjs';
 import { Battleground } from './models/i-battlegrounds';
+import { Hero } from './models/i-heroes';
+import { Monster } from './models/i-monsters';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +21,13 @@ export class AppService {
 
   getBg(): Observable<Battleground[]>{
     return this.http.get<Battleground[]>(this.bgUrl);
+  }
+
+  getHero(): Observable<Hero[]>{
+    return this.http.get<Hero[]>(this.heroUrl);
+  }
+
+  getMonster(): Observable<Monster[]>{
+    return this.http.get<Monster[]>(this.monsterUrl);
   }
 }
