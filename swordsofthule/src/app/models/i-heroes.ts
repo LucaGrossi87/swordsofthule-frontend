@@ -5,7 +5,7 @@ import { User } from "./i-users";
 
 export interface Hero {
     id?:number;
-    name:String;
+    name:string;
     level:number;
     attack:number;
     defence: number;
@@ -14,5 +14,4 @@ export interface Hero {
     type:HeroClass;
     xp:number;
     itemList: Item[];
-    user:User;
 }

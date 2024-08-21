@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environments';
 import { Observable } from 'rxjs';
@@ -29,5 +29,9 @@ export class AppService {
 
   getMonster(): Observable<Monster[]>{
     return this.http.get<Monster[]>(this.monsterUrl);
+  }
+
+  updateHero(id:number, hero:Hero): Observable<void> {
+      return this.http.put<void>(`${this.heroUrl}/${id}`, hero)
   }
 }
