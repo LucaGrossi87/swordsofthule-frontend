@@ -56,7 +56,13 @@ combat() {
       this.combatExit=`${this.selectedMonster.name} è morto`
     }
 
-    this.appSvc.updateHero(this.selectedHero.id!, this.selectedHero)
+    this.appSvc.updateHero(this.selectedHero.id!, this.selectedHero).subscribe({
+      next: () => console.log('Update successful'),
+      error: (err) => {
+        console.error('Update failed', err);
+        alert(`Error: ${err.message || 'Unknown error'}`);
+      }
+    });
   }
 }
 

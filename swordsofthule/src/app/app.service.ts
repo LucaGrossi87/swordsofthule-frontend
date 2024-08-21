@@ -32,6 +32,7 @@ export class AppService {
   }
 
   updateHero(id:number, hero:Hero): Observable<void> {
+    console.log("check");
       return this.http.put<void>(`${this.heroUrl}/${id}`, hero)
   }
 }
