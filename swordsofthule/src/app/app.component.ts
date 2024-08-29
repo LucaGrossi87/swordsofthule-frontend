@@ -20,6 +20,9 @@ export class AppComponent implements OnInit {
   selectedMonster:Monster | undefined
   isCombat:boolean = false
   combatExit:String=''
+  xpLoot:number=0
+  shardsLoot:number=0
+  levelUp:number=0
 
   constructor(
     private appSvc: AppService
@@ -53,6 +56,14 @@ combat() {
       this.combatExit=`${this.selectedHero.name} è morto`
     } else {
       this.selectedMonster.hitPoints=0
+      this.xpLoot=this.selectedMonster.level*100
+      this.shardsLoot=(this.selectedMonster.level*0.75)+(this.selectedMonster.level*Math.floor(Math.random()*6)/10) //dovrà essere registrata all'utente loggato
+      this.selectedHero.xp+=this.xpLoot
+      for (let i = 0; i < 20; i++) {
+        if (this.selectedHero.xp>Math.pow(2,i)*1000)
+          this.levelUp=i
+        this.selectedHero.level=this.levelUp
+      }
       this.combatExit=`${this.selectedMonster.name} è morto`
     }
 
