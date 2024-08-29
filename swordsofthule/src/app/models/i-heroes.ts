@@ -1,7 +1,6 @@
 import { HeroClass } from "./heroClass";
 import { HeroRace } from "./heroRace";
 import { Item } from "./i-items";
-import { User } from "./i-users";
 
 export interface Hero {
     id?:number;
@@ -13,5 +12,6 @@ export interface Hero {
     race:HeroRace;
     type:HeroClass;
     xp:number;
+    goldShards:number;
     itemList: Item[];
 }

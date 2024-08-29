@@ -33,7 +33,7 @@ ngOnInit(): void {
     this.bgs = data
   })
   this.appSvc.getHero().subscribe((data) => {
-    this.heroes = data
+    this.heroes = data.sort((a,b) => a.level - b.level)
   })
   this.appSvc.getMonster().subscribe((data) => {
     this.monsters = data
@@ -46,9 +46,13 @@ combat() {
     this.isCombat=true
     this.selectedMonster=this.monsters[0]
     while (this.selectedHero.hitPoints>0 && this.selectedMonster.hitPoints>0) {
-      this.selectedHero.hitPoints=(this.selectedHero.attack+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7))
+      this.selectedMonster.hitPoints-=Math.max(0,(this.selectedHero.attack+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7)))
+      console.log(this.selectedMonster.hitPoints);
       if (this.selectedMonster.hitPoints>0) {
-        this.selectedMonster.hitPoints=(this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (this.selectedHero.defence+Math.floor(Math.random() * 7))
+        console.log(this.selectedHero.hitPoints);
+        this.selectedHero.hitPoints-=Math.max(0, (this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (this.selectedHero.defence+Math.floor(Math.random() * 7)))
+        console.log(this.selectedHero.hitPoints);
+
       }
     }
     if(this.selectedHero.hitPoints <= 0) {
@@ -57,12 +61,13 @@ combat() {
     } else {
       this.selectedMonster.hitPoints=0
       this.xpLoot=this.selectedMonster.level*100
-      this.shardsLoot=(this.selectedMonster.level*0.75)+(this.selectedMonster.level*Math.floor(Math.random()*6)/10) //dovrà essere registrata all'utente loggato
+      this.shardsLoot=Math.floor((this.selectedMonster.level*0.75)*10+(this.selectedMonster.level*Math.floor(Math.random()*6)))
+      this.selectedHero.goldShards+=this.shardsLoot
       this.selectedHero.xp+=this.xpLoot
       for (let i = 0; i < 20; i++) {
-        if (this.selectedHero.xp>Math.pow(2,i)*1000)
-          this.levelUp=i
-        this.selectedHero.level=this.levelUp
+        if (this.selectedHero.xp>=Math.pow(2,i)*1000) {
+          this.levelUp=i+2
+          this.selectedHero.level=this.levelUp}
       }
       this.combatExit=`${this.selectedMonster.name} è morto`
     }
@@ -87,7 +92,5 @@ checkHero(event: any, hero: Hero) {
 
 selectHero() {
 this.selectedHero=this.checkedHero;
-console.log(this.selectedHero);
-
 }
 }
