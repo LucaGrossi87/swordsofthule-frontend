@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   xpLoot:number=0
   shardsLoot:number=0
   levelUp:number=0
+  leveledMonsters: Monster[]=[]
 
   constructor(
     private appSvc: AppService
@@ -42,9 +43,8 @@ ngOnInit(): void {
 }
 
 combat() {
-  if (this.selectedHero!=undefined) {
+  if (this.selectedHero!=undefined && this.selectedMonster) {
     this.isCombat=true
-    this.selectedMonster=this.monsters[0]
     while (this.selectedHero.hitPoints>0 && this.selectedMonster.hitPoints>0) {
       this.selectedMonster.hitPoints-=Math.max(0,(this.selectedHero.attack+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7)))
       console.log(this.selectedMonster.hitPoints);
@@ -84,7 +84,15 @@ combat() {
 
 checkHero(event: any, hero: Hero) {
   if (event.target.checked) {
+    this.leveledMonsters=[]
     this.checkedHero=hero;
+    for (let i = 0; i < this.monsters.length; i++) {
+      const mon = this.monsters[i];
+      if (mon.level>hero.level-3 && mon.level<hero.level+3) {
+          this.leveledMonsters.push(mon)
+      }
+    }
+    this.selectedMonster=this.leveledMonsters[Math.floor(Math.random()*this.leveledMonsters.length)]
   } else {
     this.checkedHero = undefined
   }

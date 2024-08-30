@@ -7,7 +7,12 @@
 <button (click)="selectHero()">Scegli</button>
 
 <h4>Monsters:</h4>
-<div *ngFor="let monster of monsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - {{monster.type}}</div>
+<div *ngFor="let monster of leveledMonsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - {{monster.type}}</div>
+
+<div *ngIf="selectedMonster">
+<h4>Monster to fight:</h4>
+<div> {{selectedMonster.name}} - Attack:{{selectedMonster.attack}} - Defence:{{selectedMonster.defence}} - {{selectedMonster.type}}</div>
+</div>
 
 <button (click)="combat()"> Fight! </button>
 <div *ngIf="isCombat">
