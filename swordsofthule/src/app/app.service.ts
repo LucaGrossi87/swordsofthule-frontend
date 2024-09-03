@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Battleground } from './models/i-battlegrounds';
 import { Hero } from './models/i-heroes';
 import { Monster } from './models/i-monsters';
+import { User } from './models/i-users';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,10 @@ export class AppService {
   }
 
   updateHero(id:number, hero:Hero): Observable<void> {
-    console.log("check");
       return this.http.put<void>(`${this.heroUrl}/${id}`, hero)
+  }
+
+  updateUser(id:number, user:User): Observable<void> {
+      return this.http.put<void>(`${this.userUrl}/${id}`, user)
   }
 }

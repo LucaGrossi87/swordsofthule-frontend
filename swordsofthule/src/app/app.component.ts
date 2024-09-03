@@ -62,7 +62,7 @@ combat() {
       this.selectedMonster.hitPoints=0
       this.xpLoot=this.selectedMonster.level*100
       this.shardsLoot=Math.floor((this.selectedMonster.level*0.75)*10+(this.selectedMonster.level*Math.floor(Math.random()*6)))
-      this.selectedHero.goldShards+=this.shardsLoot
+      this.selectedHero.user.goldShards+=this.shardsLoot
       this.selectedHero.xp+=this.xpLoot
       for (let i = 0; i < 20; i++) {
         if (this.selectedHero.xp>=Math.pow(2,i)*1000) {
@@ -72,6 +72,7 @@ combat() {
       this.combatExit=`${this.selectedMonster.name} è morto`
     }
 
+
     this.appSvc.updateHero(this.selectedHero.id!, this.selectedHero).subscribe({
       next: () => console.log('Update successful'),
       error: (err) => {
@@ -79,6 +80,15 @@ combat() {
         alert(`Error: ${err.message || 'Unknown error'}`);
       }
     });
+
+    this.appSvc.updateUser(this.selectedHero.user.id!, this.selectedHero.user).subscribe({
+      next: () => console.log('Update successful'),
+      error: (err) => {
+        console.error('Update failed', err);
+        alert(`Error: ${err.message || 'Unknown error'}`);
+      }
+    });
+
   }
 }
 

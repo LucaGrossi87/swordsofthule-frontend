@@ -3,11 +3,11 @@
 <div *ngFor="let bg of bgs">{{bg.name}} - {{bg.type}}</div>
 
 <h4>Heroes:</h4>
-<div *ngFor="let hero of heroes" [ngClass]="{ 'red':checkedHero==hero}"> {{hero.name}} - {{hero.race}} - {{hero.type}} - Attack:{{hero.attack}} - Defence:{{hero.defence}} - Level:{{hero.level}} {{hero.xp}} XP - HP:{{hero.hitPoints}} - Shards:{{hero.goldShards}}- <input type="checkbox" [id]="hero.id" [name]="hero.name" [value]="hero" [checked]="checkedHero==hero" (change)="checkHero($event, hero)"></div>
+<div *ngFor="let hero of heroes" [ngClass]="{ 'red':checkedHero==hero}"> {{hero.name}} - {{hero.race}} - {{hero.type}} - Attack:{{hero.attack}} - Defence:{{hero.defence}} - Level:{{hero.level}} {{hero.xp}} XP - HP:{{hero.hitPoints}} - User: {{hero.user.userName}} - {{hero.user.goldShards}} GS- <input type="checkbox" [id]="hero.id" [name]="hero.name" [value]="hero" [checked]="checkedHero==hero" (change)="checkHero($event, hero)"></div>
 <button (click)="selectHero()">Scegli</button>
 
 <h4>Monsters:</h4>
-<div *ngFor="let monster of leveledMonsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - {{monster.type}}</div>
+<div *ngFor="let monster of leveledMonsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - HP: {{monster.hitPoints}} - {{monster.type}}</div>
 
 <div *ngIf="selectedMonster">
 <h4>Monster to fight:</h4>
