@@ -6,4 +6,5 @@ export interface Item {
   type: ItemType;
   attack: number;
   defence: number;
+  price: number;
 }

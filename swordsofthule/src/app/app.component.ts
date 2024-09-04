@@ -5,6 +5,7 @@ import { Hero} from './models/i-heroes';
 import { Monster } from './models/i-monsters';
 import { HeroRace } from './models/heroRace';
 import { HeroClass } from './models/heroClass';
+import { Item } from './models/i-items';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
   bgs: Battleground[]=[];
   heroes: Hero[]=[];
   monsters: Monster[]=[];
+  items: Item[]=[];
   selectedHero:Hero | undefined
   checkedHero:Hero | undefined
   selectedMonster:Monster | undefined
@@ -24,20 +26,27 @@ export class AppComponent implements OnInit {
   shardsLoot:number=0
   levelUp:number=0
   leveledMonsters: Monster[]=[]
+  attBonus:number=0
+  defBonus:number=0
 
   constructor(
     private appSvc: AppService
   ) {}
 
 ngOnInit(): void {
-  this.appSvc.getBg().subscribe((data) => {
+  this.appSvc.getBgs().subscribe((data) => {
     this.bgs = data
   })
-  this.appSvc.getHero().subscribe((data) => {
+  this.appSvc.getHeroes().subscribe((data) => {
     this.heroes = data.sort((a,b) => a.level - b.level)
+    console.log(this.heroes);
+
   })
-  this.appSvc.getMonster().subscribe((data) => {
+  this.appSvc.getMonsters().subscribe((data) => {
     this.monsters = data
+  })
+  this.appSvc.getItems().subscribe((data) => {
+    this.items = data
   })
 
 }
@@ -45,14 +54,18 @@ ngOnInit(): void {
 combat() {
   if (this.selectedHero!=undefined && this.selectedMonster) {
     this.isCombat=true
+    for (let i = 0; i < this.selectedHero.itemList.length; i++) {
+      const item = this.selectedHero.itemList[i];
+      this.attBonus+=item.attack
+      this.defBonus+=item.defence
+    }
     while (this.selectedHero.hitPoints>0 && this.selectedMonster.hitPoints>0) {
-      this.selectedMonster.hitPoints-=Math.max(0,(this.selectedHero.attack+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7)))
+      this.selectedMonster.hitPoints-=Math.max(0,(this.selectedHero.attack+this.attBonus+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7)))
       console.log(this.selectedMonster.hitPoints);
       if (this.selectedMonster.hitPoints>0) {
         console.log(this.selectedHero.hitPoints);
-        this.selectedHero.hitPoints-=Math.max(0, (this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (this.selectedHero.defence+Math.floor(Math.random() * 7)))
+        this.selectedHero.hitPoints-=Math.max(0, (this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (this.selectedHero.defence+this.defBonus+Math.floor(Math.random() * 7)))
         console.log(this.selectedHero.hitPoints);
-
       }
     }
     if(this.selectedHero.hitPoints <= 0) {
@@ -72,11 +85,13 @@ combat() {
       this.combatExit=`${this.selectedMonster.name} è morto`
     }
 
+    console.log(this.selectedHero);
 
     this.appSvc.updateHero(this.selectedHero.id!, this.selectedHero).subscribe({
       next: () => console.log('Update successful'),
       error: (err) => {
         console.error('Update failed', err);
+        console.log(this.selectedHero);
         alert(`Error: ${err.message || 'Unknown error'}`);
       }
     });
@@ -110,5 +125,29 @@ checkHero(event: any, hero: Hero) {
 
 selectHero() {
 this.selectedHero=this.checkedHero;
+}
+
+buy(item: Item) {
+  if (this.selectedHero!=undefined) {
+      this.selectedHero.user.goldShards-=item.price
+      this.selectedHero.itemList.push(item)
+      console.log(this.selectedHero);
+
+      this.appSvc.updateHero(this.selectedHero.id!, this.selectedHero).subscribe({
+        next: () => console.log('Update successful'),
+        error: (err) => {
+          console.error('Update failed', err);
+          alert(`Error: ${err.message || 'Unknown error'}`);
+        }
+      });
+
+      this.appSvc.updateUser(this.selectedHero.user.id!, this.selectedHero.user).subscribe({
+        next: () => console.log('Update successful'),
+        error: (err) => {
+          console.error('Update failed', err);
+          alert(`Error: ${err.message || 'Unknown error'}`);
+        }
+      });
+    }
 }
 }

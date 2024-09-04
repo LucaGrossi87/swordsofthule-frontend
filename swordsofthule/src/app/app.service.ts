@@ -6,6 +6,7 @@ import { Battleground } from './models/i-battlegrounds';
 import { Hero } from './models/i-heroes';
 import { Monster } from './models/i-monsters';
 import { User } from './models/i-users';
+import { Item } from './models/i-items';
 
 @Injectable({
   providedIn: 'root'
@@ -20,16 +21,20 @@ export class AppService {
 
   constructor(private http: HttpClient) { }
 
-  getBg(): Observable<Battleground[]>{
+  getBgs(): Observable<Battleground[]>{
     return this.http.get<Battleground[]>(this.bgUrl);
   }
 
-  getHero(): Observable<Hero[]>{
+  getHeroes(): Observable<Hero[]>{
     return this.http.get<Hero[]>(this.heroUrl);
   }
 
-  getMonster(): Observable<Monster[]>{
+  getMonsters(): Observable<Monster[]>{
     return this.http.get<Monster[]>(this.monsterUrl);
+  }
+
+  getItems(): Observable<Item[]>{
+    return this.http.get<Item[]>(this.itemUrl);
   }
 
   updateHero(id:number, hero:Hero): Observable<void> {
