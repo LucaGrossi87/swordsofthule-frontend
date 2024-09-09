@@ -41,6 +41,11 @@ ngOnInit(): void {
   })
   this.appSvc.getHeroes().subscribe((data) => {
     this.heroes = data.sort((a,b) => a.level - b.level)
+    for (let index = 0; index < this.heroes.length; index++) {
+      const element = this.heroes[index];
+      console.log(element.user);
+
+    }
   })
   this.appSvc.getMonsters().subscribe((data) => {
     this.monsters = data
@@ -62,50 +67,60 @@ combat() {
           this.attBonus+=item.attack
           this.defBonus+=item.defence
         }
-        if (hero.hitPoints>0 && this.selectedMonster.hitPoints>0) {
-          this.selectedMonster.hitPoints-=Math.max(0,(hero.attack+this.attBonus+Math.floor(Math.random() * 7)) - (this.selectedMonster.defence+Math.floor(Math.random() * 7)))
+          this.selectedMonster.hitPoints-=Math.max(0,(hero.attack+this.attBonus+Math.floor(Math.random() * 7)) - (Math.floor(this.selectedMonster.defence/this.partyArray.length)+Math.floor(Math.random() * 7)))
           console.log(this.selectedMonster.hitPoints);
-        } else if (hero.hitPoints<= 0) {
-          hero.hitPoints=0
-          delete this.partyArray[h]
-          this.combatExit+=`${hero.name} è morto`
-        }
-      }
-        if (this.selectedMonster.hitPoints>0) {
-          for (let h = 0; h < this.partyArray.length; h++) {
-            const hero = this.partyArray[h]
-            hero.hitPoints-=Math.max(0, (this.selectedMonster.attack+Math.floor(Math.random() * 7)) - (hero.defence+this.defBonus+Math.floor(Math.random() * 7)))
-            console.log(hero.name + hero.hitPoints);
-          }
-        } else {
+        if (this.selectedMonster.hitPoints<=0) {
           this.selectedMonster.hitPoints=0
           this.xpLoot=this.selectedMonster.level*100
           this.shardsLoot=Math.floor((this.selectedMonster.level*0.75)*10+(this.selectedMonster.level*Math.floor(Math.random()*6)))
-          for (let h = 0; h < this.partyArray.length; h++) {
-            const hero = this.partyArray[h];
-            hero.user.goldShards+=this.shardsLoot
-            hero.xp+=this.xpLoot
-            for (let i = 0; i < 20; i++) {
-              if (hero.xp>=Math.pow(2,i)*1000) {
-                this.levelUp=i+2
-                hero.level=this.levelUp}
-            }
+          const hero = this.partyArray[h];
+          hero.user.goldShards+=this.shardsLoot
+          hero.xp+=this.xpLoot
+          for (let i = 0; i < 20; i++) {
+            if (hero.xp>=Math.pow(2,i)*1000) {
+              this.levelUp=i+2
+              hero.level=this.levelUp}
           }
           this.combatExit=`${this.selectedMonster.name} è morto`
         }
+      }
+
+      if (this.selectedMonster.hitPoints>0 && this.partyArray.length>0) {
+        for (let h = 0; h < this.partyArray.length; h++) {
+          const hero = this.partyArray[h]
+          hero.hitPoints-=Math.max(0, (Math.floor(this.selectedMonster.attack/this.partyArray.length)+Math.floor(Math.random() * 7)) - (hero.defence+this.defBonus+Math.floor(Math.random() * 7)))
+          console.log(hero.name + hero.hitPoints);
+          if (hero.hitPoints<=0) {
+            hero.hitPoints=0
+            this.appSvc.updateHero(hero.id!, hero).subscribe({
+              next: () => console.log('Update successful'),
+              error: (err) => {
+                console.error('Update failed', err);
+                console.log(this.selectedHero);
+                alert(`Error: ${err.message || 'Unknown error'}`);
+              }
+            })
+            this.partyArray.splice(h,1)
+            this.combatExit+=`${hero.name} è morto`
+            console.log(this.partyArray);
+          }
+          }
+        }
     }
-    }
+  }
 
     for (let h = 0; h < this.partyArray.length; h++) {
       const hero = this.partyArray[h];
-      this.appSvc.updateHero(hero.id!, hero).subscribe({
-        next: () => console.log('Update successful'),
-        error: (err) => {
-          console.error('Update failed', err);
-          console.log(this.selectedHero);
-          alert(`Error: ${err.message || 'Unknown error'}`);
-        }
-      });
+      if (hero!=undefined) {
+        this.appSvc.updateHero(hero.id!, hero).subscribe({
+          next: () => console.log('Update successful'),
+          error: (err) => {
+            console.error('Update failed', err);
+            console.log(this.selectedHero);
+            alert(`Error: ${err.message || 'Unknown error'}`);
+          }
+        });
+      }
       this.appSvc.updateUser(hero.user.id!, hero.user).subscribe({
         next: () => console.log('Update successful'),
         error: (err) => {
