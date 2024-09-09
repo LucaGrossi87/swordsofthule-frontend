@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   attBonus:number=0
   defBonus:number=0
   partyArray:Hero[]=[]
+  partyLevel:number=0
 
   constructor(
     private appSvc: AppService
@@ -121,15 +122,7 @@ combat() {
 
 checkHero(event: any, hero: Hero) {
   if (event.target.checked) {
-    this.leveledMonsters=[]
     this.checkedHero=hero;
-    for (let i = 0; i < this.monsters.length; i++) {
-      const mon = this.monsters[i];
-      if (mon.level>hero.level-3 && mon.level<hero.level+3) {
-          this.leveledMonsters.push(mon)
-      }
-    }
-    this.selectedMonster=this.leveledMonsters[Math.floor(Math.random()*this.leveledMonsters.length)]
   } else {
     this.checkedHero = undefined
   }
@@ -139,12 +132,24 @@ selectHero() {
 if (this.checkedHero){
   if (this.partyArray.length<3){
 this.partyArray.push(this.checkedHero)
+this.partyLevel+=this.checkedHero.level
 } else {
 this.partyArray.unshift(this.checkedHero)
-this.partyArray.pop()
+this.partyLevel+=this.checkedHero.level
+let deleteHero = this.partyArray.pop()
+this.partyLevel-=deleteHero!.level
 }
 }
-console.log(this.partyArray);
+  console.log(this.partyLevel);
+
+this.leveledMonsters=[]
+for (let i = 0; i < this.monsters.length; i++) {
+  const mon = this.monsters[i];
+  if (mon.level>this.partyLevel-3 && mon.level<this.partyLevel+3) {
+      this.leveledMonsters.push(mon)
+  }
+}
+this.selectedMonster=this.leveledMonsters[Math.floor(Math.random()*this.leveledMonsters.length)]
 }
 
 buy(item: Item) {

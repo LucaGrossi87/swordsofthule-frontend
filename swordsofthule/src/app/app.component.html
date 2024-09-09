@@ -6,6 +6,11 @@
 <div *ngFor="let hero of heroes" [ngClass]="{ 'red':checkedHero==hero}"> {{hero.name}} - {{hero.race}} - {{hero.type}} - Attack:{{hero.attack}} - Defence:{{hero.defence}} - [Items Equipped: <span *ngFor="let item of hero.itemList">{{item.name}} - Att:{{item.attack}} - Def: {{item.defence}}</span>] - Level:{{hero.level}} {{hero.xp}} XP - HP:{{hero.hitPoints}} - User: {{hero.user.userName}} - {{hero.user.goldShards}} GS- <input type="checkbox" [id]="hero.id" [name]="hero.name" [value]="hero" [checked]="checkedHero==hero" (change)="checkHero($event, hero)"></div>
 <button (click)="selectHero()">Scegli</button>
 
+<div *ngIf="partyArray.length">
+<h4>Party</h4>
+<div *ngFor="let hero of partyArray"> {{hero.name}}</div>
+</div>
+
 <h4>Monsters:</h4>
 <div *ngFor="let monster of leveledMonsters">{{monster.name}} - Attack:{{monster.attack}} - Defence:{{monster.defence}} - HP: {{monster.hitPoints}} - {{monster.type}}</div>
 
