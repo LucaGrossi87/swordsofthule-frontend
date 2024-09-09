@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   leveledMonsters: Monster[]=[]
   attBonus:number=0
   defBonus:number=0
+  partyArray:Hero[]=[]
 
   constructor(
     private appSvc: AppService
@@ -39,8 +40,6 @@ ngOnInit(): void {
   })
   this.appSvc.getHeroes().subscribe((data) => {
     this.heroes = data.sort((a,b) => a.level - b.level)
-    console.log(this.heroes);
-
   })
   this.appSvc.getMonsters().subscribe((data) => {
     this.monsters = data
@@ -124,7 +123,15 @@ checkHero(event: any, hero: Hero) {
 }
 
 selectHero() {
-this.selectedHero=this.checkedHero;
+if (this.checkedHero){
+  if (this.partyArray.length<3){
+this.partyArray.push(this.checkedHero)
+} else {
+this.partyArray.unshift(this.checkedHero)
+this.partyArray.pop()
+}
+}
+console.log(this.partyArray);
 }
 
 buy(item: Item) {
