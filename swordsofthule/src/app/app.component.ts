@@ -67,7 +67,20 @@ combat() {
           this.attBonus+=item.attack
           this.defBonus+=item.defence
         }
-          this.selectedMonster.hitPoints-=Math.max(0,(hero.attack+this.attBonus+Math.floor(Math.random() * 7)) - (Math.floor(this.selectedMonster.defence/this.partyArray.length)+Math.floor(Math.random() * 7)))
+        switch (hero.type) {
+          case HeroClass.FIGHTER:
+            this.fight(hero)
+            break
+          case HeroClass.MAGE:
+            this.cast(hero)
+            break
+          case HeroClass.HEALER:
+            this.heal(hero)
+            break
+          case HeroClass.ARCHER:
+            this.shoot(hero)
+            break
+        }
           console.log(this.selectedMonster.hitPoints);
         if (this.selectedMonster.hitPoints<=0) {
           this.selectedMonster.hitPoints=0
@@ -190,4 +203,30 @@ buy(item: Item) {
       });
     }
 }
+
+heal(healer:Hero) {
+  for (let h = 0; h < this.partyArray.length; h++) {
+    const hero = this.partyArray[h];
+    hero.hitPoints+=healer.attack/2
+  }
+}
+
+fight(fighter:Hero) {
+  if (this.selectedMonster) {
+    this.selectedMonster.hitPoints-=Math.max(0,(fighter.attack+this.attBonus+Math.floor(Math.random() * 7)) - (Math.floor(this.selectedMonster.defence/this.partyArray.length)+Math.floor(Math.random() * 7)))
+  }
+}
+
+shoot(archer:Hero) {
+  if (this.selectedMonster) {
+    this.selectedMonster.hitPoints-=Math.max(0,(archer.attack+this.attBonus+Math.floor(Math.random() * 7)) - (Math.floor(this.selectedMonster.defence/this.partyArray.length)+Math.floor(Math.random() * 7)))
+  }
+}
+
+cast(mage:Hero) {
+  if (this.selectedMonster) {
+    this.selectedMonster.hitPoints-=Math.max(0,(mage.attack+this.attBonus+Math.floor(Math.random() * 7)) - (Math.floor(this.selectedMonster.defence/this.partyArray.length)+Math.floor(Math.random() * 7)))
+  }
+}
+
 }
