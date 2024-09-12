@@ -93,6 +93,7 @@ export class AppComponent implements OnInit {
             for (let i = 0; i < 20; i++) {
               if (hero.xp >= Math.pow(2, i) * 1000) {
                 this.levelUp = i + 2;
+                hero.perkPoints=5*(this.levelUp-hero.level)
                 hero.level = this.levelUp;
               }
             }
@@ -219,6 +220,9 @@ export class AppComponent implements OnInit {
     for (let h = 0; h < this.partyArray.length; h++) {
       const hero = this.partyArray[h];
       hero.hitPoints += ((healer.attack/2)-healer.level)+Math.floor(Math.random()*((healer.level*2)+1));
+      if (hero.hitPoints>hero.hitPointsMax) {
+        hero.hitPoints=hero.hitPointsMax
+      }
     }
   }
 
