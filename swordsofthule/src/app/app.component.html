@@ -17,6 +17,7 @@
 <div *ngIf="selectedMonster">
 <h4>Monster to fight:</h4>
 <div> {{selectedMonster.name}} - Attack:{{selectedMonster.attack}} - Defence:{{selectedMonster.defence}} - {{selectedMonster.type}}</div>
+<div *ngIf="selectedBg">{{selectedBg.name}} - {{selectedBg.type}}</div>
 </div>
 
 <button (click)="combat()"> Fight! </button>

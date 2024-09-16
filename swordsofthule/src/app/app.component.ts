@@ -6,6 +6,8 @@ import { Monster } from './models/i-monsters';
 import { HeroRace } from './models/heroRace';
 import { HeroClass } from './models/heroClass';
 import { Item } from './models/i-items';
+import { MonsterType } from './models/monsterType';
+import { BattlegroundType } from './models/battlegroundType';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +32,8 @@ export class AppComponent implements OnInit {
   defBonus: number = 0;
   partyArray: Hero[] = [];
   partyLevel: number = 0;
+  selectedBg:Battleground|undefined;
+  heroAtk:number=0
 
 
   constructor(private appSvc: AppService) {}
@@ -163,6 +167,11 @@ export class AppComponent implements OnInit {
   }
 
   selectHero() {
+    this.selectedBg=this.bgs[
+      Math.floor(Math.random() * this.bgs.length)
+    ];
+    console.log(this.selectedBg);
+
     if (this.checkedHero) {
       if (this.partyArray.length < 3) {
         this.partyArray.push(this.checkedHero);
@@ -254,7 +263,7 @@ export class AppComponent implements OnInit {
 
   cast(mage: Hero) {
     if (this.selectedMonster) {
-      this.selectedMonster.hitPoints -= Math.max(
+      this.heroAtk = Math.max(
         0,
         mage.attack +
           this.attBonus +
@@ -262,6 +271,20 @@ export class AppComponent implements OnInit {
           (Math.floor(this.selectedMonster.defence / this.partyArray.length) +
             Math.floor(Math.random() * 7))
       );
+      switch (this.selectedMonster.type) {
+        case MonsterType.CONSTRUCT:
+        this.heroAtk+=Math.floor(mage.attack/4)
+          break;
+        case MonsterType.MONSTROSITY:
+          this.heroAtk-=Math.floor(this.selectedMonster.defence/4)
+          break;
+      }
+      switch (this.selectedBg?.type) {
+        case BattlegroundType.FOREST:
+          this.heroAtk-=Math.floor(mage.attack/4)
+          break;
+      }
+      this.selectedMonster.hitPoints-=this.heroAtk
     }
   }
 }
